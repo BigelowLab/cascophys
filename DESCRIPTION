@@ -1,0 +1,21 @@
+Package: cascophys
+Title: FVCOM for cascophys
+Description: Convenience tools for working with Casco Bay centric FVCOM datasets.
+Version: 0.1
+Encoding: UTF-8
+Depends:
+    R (>= 4.1)
+Imports:
+    graphics,
+    rlang,
+    ncdf4,
+    dplyr,
+    sf,
+    fvcom,
+    locate,
+    R6
+Maintainer: Ben Tupper <btupper@bigelow.org>
+Author: Ben Tupper <btupper@bigelow.org>
+URL: https://github.com/BigelowLab/cascophys
+License: MIT + file LICENSE
+RoxygenNote: 7.1.2
