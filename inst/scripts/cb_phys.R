@@ -1,21 +1,28 @@
 library(sf)
 library(ncdf4)
 library(dplyr)
-COLORS <- RColorBrewer::brewer.pal(8, "Dark2")
+COLORS <- palette.colors()
 fvcom <- "/mnt/ecocast/corecode/R/fvcom"
 #devtools::load_all(fvcom)
 library(fvcom)
 cascophys <- "/mnt/ecocast/corecode/R/cascophys"
-#devtools::load_all(cascophys)
-library(cascophys)
+devtools::load_all(cascophys)
+#library(cascophys)
 CB <- CascoBayPhysics(verbose = TRUE)
+P0 <- CB$random_points(n=1)
 
-P<- sf::read_sf("/mnt/ecocast/coredata/cascobay/runs/particle_60_10800.gpkg")
 
+
+P <- sf::read_sf("/mnt/ecocast/coredata/cascobay/runs/particle_60_10800.gpkg") |>
+  sf::st_set_crs(CB$get_crs(form = 'wkt'))
+
+PLL <- P |>
+  sf::st_transform(crs = 4326)
 
 #(P0 <- CB$random_points(n=1))$elem
 #P <- particle_track(CB, P0 = P0, tmax = 3600)
 
+if (FALSE){
 times <- 3600 * 1:3
 pp <- lapply(times, function(tmax){
   ofile <- file.path("/mnt/ecocast/coredata/cascobay/runs", 
@@ -24,9 +31,23 @@ pp <- lapply(times, function(tmax){
                  tmax = tmax,
                  show_progress = TRUE,
                  filename = ofile)
-})
+  })
 
+ff <- list.files("/mnt/ecocast/coredata/cascobay/runs", full.names = T)
+pp <- lapply(ff, read_sf)
+pp <- pp[sapply(pp, nrow) > 500]
 
+p <- lapply(seq_along(pp), 
+             function(i){
+               pp[[i]] <- pp[[i]] |> dplyr::mutate(track = i)
+               pp[[i]]
+            }) |>
+  dplyr::bind_rows() |>
+  sf::st_set_crs(sf::st_crs(CB$M))
+
+}
+
+if (FALSE){
 times <- 3600 * c(18, 24, 36, 48)
 pp <- lapply(times, function(tmax){
   ofile <- file.path("/mnt/ecocast/coredata/cascobay/runs", 
@@ -36,22 +57,9 @@ pp <- lapply(times, function(tmax){
                  show_progress = TRUE,
                  filename = ofile)
 })
-
-P <- sf::read_sf("/mnt/ecocast/coredata/cascobay/runs/particle_60_10800.gpkg")
-pt <- P |> 
-  sf::st_transform(crs = 4326) |>
-  sf::st_coordinates(P) |>
-  sf::st_linestring() |>
-  sf::st_sfc(crs = 4326)
-
-p <- sf::st_sf(dplyr::tibble(geometry = pt), crs = 4326)
+}
 
 
-
-library(leaflet)
-leaflet(data = pt) |>
-  addTiles() |>
-  addPolygons()
 
 if (FALSE){
   

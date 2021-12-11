@@ -34,6 +34,7 @@ R6 base class
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{CB_Physics$new()}}
+\item \href{#method-get_crs}{\code{CB_Physics$get_crs()}}
 \item \href{#method-get_time}{\code{CB_Physics$get_time()}}
 \item \href{#method-random_points}{\code{CB_Physics$random_points()}}
 \item \href{#method-char_size}{\code{CB_Physics$char_size()}}
@@ -63,8 +64,30 @@ R6 base class
 \item{\code{origin}}{POSIXct timestamp indicating the start of the experiment}
 
 \item{\code{verbose}}{logical for helpful messaging}
+
+\item{\code{crs}}{}
 }
 \if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_crs"></a>}}
+\if{latex}{\out{\hypertarget{method-get_crs}{}}}
+\subsection{Method \code{get_crs()}}{
+Retrieve the CRS
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{CB_Physics$get_crs(form = c("proj", "wkt")[1])}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{form}}{character, one of 'proj', 'wkt'}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+CRS in the specified form
 }
 }
 \if{html}{\out{<hr>}}

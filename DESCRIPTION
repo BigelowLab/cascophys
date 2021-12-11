@@ -6,7 +6,10 @@ Encoding: UTF-8
 Depends:
     R (>= 4.1)
 Imports:
+    grDevices,
     graphics,
+    utils, 
+    stats,
     rlang,
     ncdf4,
     dplyr,

@@ -6,11 +6,12 @@
 \usage{
 particle_track(
   CB,
-  P0 = CB$random_point(),
+  P0 = CB$random_points(),
   tstep = 60,
   tmax = 3600 * 12,
   show_progress = TRUE,
-  filename = c("particle_track.gpkg", NA)[2]
+  filename = c("particle_track.gpkg", NA)[2],
+  overwrite = TRUE
 )
 }
 \arguments{
@@ -23,6 +24,10 @@ particle_track(
 \item{tmax}{numeric, number of seconds to run for}
 
 \item{show_progress}{logical, if TRUE then show a progress bar}
+
+\item{filename}{an optional filename to save the track to or NA to skip}
+
+\item{overwrite}{logical, if TRUE allow overwriting of existing files}
 }
 \value{
 sf object of type POINT

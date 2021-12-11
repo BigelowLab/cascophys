@@ -18,6 +18,7 @@ CB_Physics <- R6::R6Class("CB_Physics",
     
     #' @param filename character either a filename or OpenDAP URL
     #' @param origin POSIXct timestamp indicating the start of the experiment
+    #' @param crs 
     #' @param verbose logical for helpful messaging
     initialize = function(filename,
                           origin = as.POSIXct("2018-05-01T00:00:00", tz = 'UTC'),
@@ -29,8 +30,21 @@ CB_Physics <- R6::R6Class("CB_Physics",
       self$NC <- try(ncdf4::nc_open(self$filename))
       if (inherits(self$NC, "try-error")) stop("unable to open NCDF4 resource:", filename[1])
       private$message("retrieving mesh")
-      self$M <- fvcom::get_mesh_geometry(self$NC, where = 'elems', what = 'xy')
+      self$M <- fvcom::get_mesh_geometry(self$NC, where = 'elems', what = 'xy',
+                                         crs = self$get_crs(form = 'wkt'))
       ok <- self$append_bounds()
+    },
+    
+    #' @description Retrieve the CRS
+    #' @param form character, one of 'proj', 'wkt'
+    #' @return CRS in the specified form
+    get_crs = function(form = c("proj", "wkt")[1]){
+      a <- ncdf4::ncatt_get(self$NC, 0)
+      crs <- paste0("+", a$CoordinateProjection)
+      if (tolower(form[1]) == 'wkt'){
+        crs <- sf::st_crs(crs)
+      }
+      crs
     },
     
     #' @description retrieve the time relative to some epoch/origin
@@ -156,7 +170,7 @@ CB_Physics <- R6::R6Class("CB_Physics",
 #' Generate  listing of one or more random points
 #' 
 #' @export
-#' @param NC CB_Physics object
+#' @param CB CB_Physics object
 #' @param n numeric the number of random points to generate
 #' @return sf POINT XYZ object with \code{n} features
 random_point <- function(CB, 
@@ -169,9 +183,9 @@ random_point <- function(CB,
       t0 <- v[1]
       v <- as.numeric(v)
       vd <- v - v[1]
-      r <- runif(n, min = vd[1], max = vd[2]) + t0
+      r <- stats::runif(n, min = vd[1], max = vd[2]) + t0
     } else {
-      r <- runif(n, min = v[1], max = v[2])
+      r <- stats::runif(n, min = v[1], max = v[2])
     }
     return(r)
   }
@@ -186,7 +200,7 @@ random_point <- function(CB,
   p <- sf::st_coordinates(p) |>
     dplyr::as_tibble() %>%
     dplyr::mutate(Z = rand(zr, n),
-                  time = CB$t0,
+                  time = CB$t0 + CB$NC$dim$time$vals[1] * (24*3600) ,
                   elem = elem) |>
     dplyr::relocate(dplyr::contains("elem"), .before = 1) |>
     sf::st_as_sf(coords = c("X", "Y", "Z"), 

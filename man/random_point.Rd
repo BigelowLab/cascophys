@@ -7,9 +7,9 @@
 random_point(CB, n = 1)
 }
 \arguments{
-\item{n}{numeric the number of random points to generate}
+\item{CB}{CB_Physics object}
 
-\item{NC}{CB_Physics object}
+\item{n}{numeric the number of random points to generate}
 }
 \value{
 sf POINT XYZ object with \code{n} features

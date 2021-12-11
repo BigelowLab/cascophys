@@ -4,7 +4,7 @@ output: github_document
 ---
 
 Convenient access to [FVCOM](http://fvcom.smast.umassd.edu/fvcom/)
-Casco Bay physics model from R.
+Casco Bay physics model from R.  See [Ture and Manning, 2005](https://www.cascobayestuary.org/wp-content/uploads/2021/01/Modeling-Wind-and-Tidal-Circulation-True-2005.pdf)
 
 ### Requirements
 
