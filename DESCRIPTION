@@ -13,6 +13,7 @@ Imports:
     rlang,
     ncdf4,
     dplyr,
+    readr,
     sf,
     fvcom,
     locate,

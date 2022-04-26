@@ -2,28 +2,40 @@
 % Please edit documentation in R/track.R
 \name{particle_track}
 \alias{particle_track}
-\title{Track a particle}
+\title{Track one or more particles}
 \usage{
 particle_track(
-  CB,
-  P0 = CB$random_points(),
+  X,
+  P0 = X$random_points(),
   tstep = 60,
   tmax = 3600 * 12,
-  show_progress = TRUE,
+  reverse = FALSE,
+  drag = c(0, 0, 0),
+  show_progress = FALSE,
+  verbose = FALSE,
   filename = c("particle_track.gpkg", NA)[2],
   overwrite = TRUE
 )
 }
 \arguments{
-\item{CB}{CB_Physics object}
+\item{X}{CascoBayPhysics object}
 
-\item{P0}{starting point, see \code{CB_Physics$random_point}}
+\item{P0}{starting point(s), see \code{CascoBayPhysics$random_point}}
 
 \item{tstep}{numeric, seconds between each iteration}
 
 \item{tmax}{numeric, number of seconds to run for}
 
+\item{reverse}{logical, if TRUE run the track reverse in time.  It is an error
+to provide the seed point with a timestamp equivalent to the first timestep of the
+model.  See \code{\link{random_point}} to set the seed with other timestamps}
+
+\item{drag}{numeric, a three element vector of drag factors in [x, y, z], like a sinking rate in z.
+Drag units must be the same as the units of \code{u}, \code{v}, and \code{ww}.}
+
 \item{show_progress}{logical, if TRUE then show a progress bar}
+
+\item{verbose}{logical, if TRUE output messages (for development)}
 
 \item{filename}{an optional filename to save the track to or NA to skip}
 
@@ -33,5 +45,5 @@ particle_track(
 sf object of type POINT
 }
 \description{
-Track a particle
+Track one or more particles
 }

@@ -2,9 +2,13 @@
 
 export(CB_Physics)
 export(CascoBayPhysics)
+export(ll2xy)
 export(particle_track)
+export(plot_mesh)
 export(plot_track)
 export(random_point)
+export(read_deployment)
+export(xy2ll)
 importFrom(dplyr,"%>%")
 importFrom(rlang,"!!")
 importFrom(rlang,":=")

@@ -18,11 +18,12 @@ CB_Physics <- R6::R6Class("CB_Physics",
     
     #' @param filename character either a filename or OpenDAP URL
     #' @param origin POSIXct timestamp indicating the start of the experiment
-    #' @param crs 
+    #' @param crs CRS, likely a string
     #' @param verbose logical for helpful messaging
     initialize = function(filename,
                           origin = as.POSIXct("2018-05-01T00:00:00", tz = 'UTC'),
-                          verbose = FALSE){
+                          verbose = FALSE,
+                          crs = "+proj=tmerc +datum=NAD83 +lon_0=-70d10 lat_0=42d50 k=.9999666666666667 x_0=900000 y_0=0"){
       self$filename <- filename[1]
       self$verbose <- verbose[1]
       self$t0 <- origin[1]
@@ -31,7 +32,7 @@ CB_Physics <- R6::R6Class("CB_Physics",
       if (inherits(self$NC, "try-error")) stop("unable to open NCDF4 resource:", filename[1])
       private$message("retrieving mesh")
       self$M <- fvcom::get_mesh_geometry(self$NC, where = 'elems', what = 'xy',
-                                         crs = self$get_crs(form = 'wkt'))
+                                         crs = crs)
       ok <- self$append_bounds()
     },
     
@@ -40,11 +41,15 @@ CB_Physics <- R6::R6Class("CB_Physics",
     #' @return CRS in the specified form
     get_crs = function(form = c("proj", "wkt")[1]){
       a <- ncdf4::ncatt_get(self$NC, 0)
-      crs <- paste0("+", a$CoordinateProjection)
+      crs <- a$CoordinateProjection
+      if (substring(crs, 1,1) != "+") crs <- paste0("+", crs)
       if (tolower(form[1]) == 'wkt'){
         crs <- sf::st_crs(crs)
       }
-      crs
+      #crs
+      #return("+init=nad83:1802")
+      #return("+proj=tmerc +datum=NAD83 +lon_0=-70d10 lat_0=42d50 k=.9999666666666667 x_0=900000 y_0=0")
+      return("+proj=tmerc +datum=NAD83 +lon_0=-60d10 lat_0=42d50 k=.9999666666666667 x_0=900000 y_0=0")
     },
     
     #' @description retrieve the time relative to some epoch/origin
@@ -132,9 +137,15 @@ CB_Physics <- R6::R6Class("CB_Physics",
       self$M <- dplyr::mutate(self$M, bounds = b) %>%
         dplyr::relocate(dplyr::starts_with("geometry"), .after = dplyr::last_col())
       invisible(self$M)
+    },
+    
+    #' @description Plot element mesh
+    #' 
+    #' @param border character color for drawing outline
+    #' @param ... other arguments for \code{\link[sf]{plot}}
+    plot = function(border = "#999999", ...){
+      plot_mesh(self, border = border, ...)
     }
-    
-    
   ), # public
   
   active = list(

@@ -27,7 +27,13 @@ devtools::install_github("BigelowLab/cascophys")
 
 ## Data Access
 
+For local use the data path defaults to the network storage, but you can alter the data source to another file (or even an OPENDAP resource).  The local file is quite large and on the network drive which may require some time to establish the connection. 
+
+Keep in mind that the implementation by the [ncdf4](https://cran.r-project.org/package=ncfd4) package will load into memory metadata (like attributes, dimensional info, etc.) but provides request methods for extraction contiguous blocks of data per variable. The data source (local file of OPENDAP resource) is kept open as connection for the life of the access object, `CascoBayPhysics`.  In theory, when the software disposes of your access object the file/resource connection is closed for you. 
+
 ```{r open}
 library(cascophys)
 CB <- CascoBayPhysics() # optional arguments, too.  See \code{?CascoBayPhysics}
+CB
 ```
+The print out of the access object, `CB`, shows that that are a number of public and private methods.

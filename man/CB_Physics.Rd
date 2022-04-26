@@ -41,6 +41,7 @@ R6 base class
 \item \href{#method-mesh_metrics}{\code{CB_Physics$mesh_metrics()}}
 \item \href{#method-append_kmetrics}{\code{CB_Physics$append_kmetrics()}}
 \item \href{#method-append_bounds}{\code{CB_Physics$append_bounds()}}
+\item \href{#method-plot}{\code{CB_Physics$plot()}}
 \item \href{#method-clone}{\code{CB_Physics$clone()}}
 }
 }
@@ -52,7 +53,9 @@ R6 base class
 \if{html}{\out{<div class="r">}}\preformatted{CB_Physics$new(
   filename,
   origin = as.POSIXct("2018-05-01T00:00:00", tz = "UTC"),
-  verbose = FALSE
+  verbose = FALSE,
+ 
+    crs = "+proj=tmerc +datum=NAD83 +lon_0=-70d10 lat_0=42d50 k=.9999666666666667 x_0=900000 y_0=0"
 )}\if{html}{\out{</div>}}
 }
 
@@ -65,7 +68,7 @@ R6 base class
 
 \item{\code{verbose}}{logical for helpful messaging}
 
-\item{\code{crs}}{}
+\item{\code{crs}}{CRS, likely a string}
 }
 \if{html}{\out{</div>}}
 }
@@ -223,6 +226,25 @@ mesh invisibly with appended boundary variable where
  \item{closed indicates the element is bounded on at least one side by shoreline}
  \item{internal indicated the element is not on the boundary}
 }
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-plot"></a>}}
+\if{latex}{\out{\hypertarget{method-plot}{}}}
+\subsection{Method \code{plot()}}{
+Plot element mesh
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{CB_Physics$plot(border = "#999999", ...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{border}}{character color for drawing outline}
+
+\item{\code{...}}{other arguments for \code{\link[sf]{plot}}}
+}
+\if{html}{\out{</div>}}
 }
 }
 \if{html}{\out{<hr>}}
