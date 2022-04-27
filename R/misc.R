@@ -13,19 +13,24 @@ read_deployment <- function(
   
   x <- readr::read_csv(filename,
                        col_types = readr::cols(
-                         datetime = readr::col_datetime(format = ""),
+                         time = readr::col_datetime(format = ""),
                          lat = readr::col_double(),
                          lon = readr::col_double(),
-                         status = readr::col_character()
-                       ))
-  x <- dplyr::bind_cols(x,
-                        ll2xy(x$lon, x$lat))
+                         status = readr::col_character(),
+                         Temp_A = readr::col_double(),
+                         Temp_B = readr::col_double(),
+                         Temp_C = readr::col_double(),
+                         Conductivity = readr::col_double(),
+                         x = readr::col_double(),
+                         y = readr::col_double(),
+                         z = readr::col_double()
+                       )) 
   
   if (tolower(form[1]) == 'sf') {
     if (tolower(use[1]) == "lonlat"){
-      x <- sf::st_as_sf(x, coords = c("lon", "lat"), crs = 4326)
+      x <- sf::st_as_sf(x, coords = c("lon", "lat", "z"), crs = 4326)
     } else {
-      x <- sf::st_as_sf(x, coords = c("x", "y"), 
+      x <- sf::st_as_sf(x, coords = c("x", "y", "z"), 
         crs = "+proj=tmerc +datum=NAD83 +lon_0=-70d10 lat_0=42d50 k=.9999666666666667 x_0=900000 y_0=0")
     }
   }
